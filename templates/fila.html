@@ -1,13 +1,39 @@
 
 {% extends "base.html" %}
 {% block content %}
-<h2>Fila de caminhões</h2>
-<div class="grid">
-{% for t in veiculos %}
-  <a class="card link" href="{{ url_for('veiculo_detail', vid=t.id) }}">
-    <h3>{{ t.placa }}</h3>
-    <p>Motorista: {{ t.motorista }}</p>
-  </a>
-{% endfor %}
+
+<h2 class="h4 mb-3">Fila de veículos</h2>
+
+<nav class="mb-3">
+  <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('borracheiro_dashboard') }}">← Voltar ao painel</a>
+</nav>
+
+<div class="table-responsive">
+  <table class="table table-sm table-bordered align-middle">
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Motorista</th>
+        <th style="width:200px">Ações</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in veiculos %}
+      <tr>
+        <td class="fw-semibold">{{ v.placa }}</td>
+        <td>{{ v.motorista }}</td>
+        <td class="d-flex gap-2">
+          <form method="post" action="{{ url_for('inspecao_nova', vid=v.id) }}">
+            <button class="btn btn-sm btn-primary">Iniciar checklist</button>
+          </form>
+          <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('veiculo_detail', vid=v.id) }}">Visualizar veículo</a>
+        </td>
+      </tr>
+      {% else %}
+      <tr><td colspan="3" class="text-muted">Nenhum veículo.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
 </div>
+
 {% endblock %}

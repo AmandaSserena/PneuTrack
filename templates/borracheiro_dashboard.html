@@ -1,12 +1,18 @@
 
 {% extends "base.html" %}
 {% block content %}
-<div class="quick-actions">
-  <a class="btn primary" href="{{ url_for('fila') }}">Abrir Fila de Caminhões</a>
-  <a class="btn" href="{{ url_for('estoque') }}">Estoque de pneus</a>
-  <a class="btn" href="{{ url_for('servicos_autorizados') }}">Veículos com serviços autorizados</a>
-  <a class="btn outline" href="#">Preencher novo veículo</a>
-  <a class="btn outline" href="#">Suporte técnico</a>
-  <a class="btn" href="{{ url_for('notificacoes') }}">Notificações</a>
+
+<h2 class="h4 mb-3">Painel do Borracheiro</h2>
+
+<nav class="d-flex gap-2 flex-wrap mb-3">
+  <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('fila') }}">📋 Fila de veículos</a>
+  <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('os_list') }}">🧾 Ordens de Serviço</a>
+  <a class="btn btn-outline-secondary btn-sm" href="{{ url_for('notificacoes') }}">🔔 Notificações</a>
+</nav>
+
+<div class="alert alert-info py-2">
+  Use a <b>Fila de veículos</b> para iniciar um checklist. Depois de preencher, clique em
+  <b>Enviar</b> para o gestor aprovar ou reprovar.
 </div>
+
 {% endblock %}

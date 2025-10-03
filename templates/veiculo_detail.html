@@ -1,67 +1,87 @@
-
 {% extends "base.html" %}
 {% block content %}
-<h2>Veículo {{ v.placa }} — {{ v.motorista }}</h2>
-<form method="post" action="{{ url_for('atualizar_pneus', vid=v.id) }}">
-  {% for e in eixos %}
-<form method='post' action='{{ url_for("eixo_excluir", eid=e.id) }}' onsubmit="return confirm('Remover eixo?')" style='float:right'>
-  <button class='btn small'>Remover eixo</button>
-</form>
-  <div class="card">
-    <h3>{{ e.nome }}</h3>
-    <div class="pneu-grid">
-      {% for p in grouped.get(e.id, []) %}
-      <div class="pneu">
-        <div class="pneu-title">{{ p.pos_label }}</div>
-        {% if p.pneu %}
-          <div class="pneu-meta">Nº fogo: <strong>{{ p.pneu.numero_fogo or '-' }}</strong></div>
-          <label>Pressão (psi)</label>
-          <input name="pressao_{{p.id}}" type="number" step="0.1" value="{{ p.pneu.pressao }}">
-          <label>Sulco (mm)</label>
-          <input name="sulco_{{p.id}}" type="number" step="0.1" value="{{ p.pneu.sulco }}">
-          <label>Movimentação</label>
-          <select name="mov_{{p.id}}">
-            <option value="">-- manter --</option>
-            <option value="rodizio">Feito rodízio</option>
-            <option value="conserto">Foi para o conserto</option>
-            <option value="recapagem">Foi para a recapagem</option>
-            <option value="estoque">Foi para o estoque</option>
-            <option value="vendido">Foi vendido</option>
-            <option value="sucateado">Foi sucateado</option>
-          </select>
-<form method='post' action='{{ url_for("desinstalar_pneu", vid=v.id, pid=p.id) }}' onsubmit="return confirm('Desinstalar pneu?')">
-  <button class='btn small'>Desinstalar</button>
-</form>
-        {% else %}
-          <div class="pneu-meta"><em>Sem pneu instalado</em></div>
-<a class='btn small outline' href='{{ url_for("instalar_pneu", vid=v.id, pid=p.id) }}'>Instalar pneu</a>
-        {% endif %}
-      </div>
-      {% endfor %}
-    </div>
-  </div>
-  {% endfor %}
-  <button class="btn success" type="submit">Enviar para análise</button>
-</form>
-<div class='card'>
-  <h3>Novo Eixo</h3>
-  <form method='post' action='{{ url_for("eixo_novo", vid=v.id) }}' class='form'>
-    <label>Nome do Eixo</label>
-    <input name='nome' placeholder='Ex: Traseiro 2º Eixo'>
-    <label>Ordem</label>
-    <input name='ordem' type='number' value='0'>
-    <button class='btn'>Adicionar eixo</button>
-  </form>
-</div>
-{% endblock %}
 
-<div class="card">
-  <h3>Anexos do veículo</h3>
-  <form method="post" action="{{ url_for('upload_veiculo', vid=v.id) }}" enctype="multipart/form-data" class="row" style="gap:8px">
-    <input type="file" name="arquivo" required>
-    <button class="btn">Enviar</button>
+<h2 class="h4 mb-3">
+  Veículo {{ v.placa }}
+  <small class="text-muted">— Motorista: {{ v.motorista }}</small>
+</h2>
+
+<nav class="mb-3 d-flex gap-2 flex-wrap">
+  <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('veiculos_list') }}">← Voltar à lista</a>
+</nav>
+
+<section class="card p-3 mb-4">
+  <h3 class="h6 mb-3">Eixos e posições de pneus</h3>
+
+  {% for ex in eixos %}
+    <div class="border rounded p-2 mb-3">
+      <div class="d-flex justify-content-between align-items-center mb-2">
+        <strong>{{ ex.ordem }}º — {{ ex.nome }}</strong>
+        <form method="post" action="{{ url_for('eixo_excluir', eid=ex.id) }}" onsubmit="return confirm('Remover este eixo?');">
+          <button class="btn btn-sm btn-outline-danger">Remover eixo</button>
+        </form>
+      </div>
+
+      <div class="table-responsive">
+        <table class="table table-sm table-bordered align-middle mb-2">
+          <thead>
+            <tr>
+              <th style="width:30%">Posição</th>
+              <th>Pneu</th>
+              <th style="width:260px">Ações</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for pos in grouped.get(ex.id, []) %}
+              <tr>
+                <td>{{ pos.pos_label }}</td>
+                <td>
+                  {% if pos.pneu %}
+                    <div class="small">
+                      <div><b>Série:</b> {{ pos.pneu.numero_serie or '-' }}</div>
+                      <div><b>Marca/Modelo:</b> {{ pos.pneu.marca or '-' }} {{ pos.pneu.modelo or '' }}</div>
+                      <div><b>Medida:</b> {{ pos.pneu.medida or '-' }}</div>
+                      <div><b>Pressão:</b> {{ pos.pneu.pressao }} | <b>Sulco:</b> {{ pos.pneu.sulco }}</div>
+                    </div>
+                  {% else %}
+                    <span class="text-muted">[vazio]</span>
+                  {% endif %}
+                </td>
+                <td class="d-flex gap-2">
+                  {% if pos.pneu %}
+                    <form method="post" action="{{ url_for('desinstalar_pneu', vid=v.id, pid=pos.id) }}">
+                      <button class="btn btn-sm btn-warning">Desinstalar</button>
+                    </form>
+                  {% else %}
+                    <a class="btn btn-sm btn-primary" href="{{ url_for('instalar_pneu', vid=v.id, pid=pos.id) }}">
+                      Instalar pneu
+                    </a>
+                  {% endif %}
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  {% endfor %}
+</section>
+
+<section class="card p-3">
+  <h3 class="h6 mb-3">Adicionar novo eixo</h3>
+  <form method="post" action="{{ url_for('eixo_novo', vid=v.id) }}" class="row g-2 align-items-end">
+    <div class="col-sm-6">
+      <label class="form-label">Nome do eixo</label>
+      <input class="form-control" type="text" name="nome" placeholder="Ex.: Traseiro 2º Eixo" required>
+    </div>
+    <div class="col-sm-3">
+      <label class="form-label">Ordem</label>
+      <input class="form-control" type="number" name="ordem" min="0" value="0">
+    </div>
+    <div class="col-sm-3">
+      <button class="btn btn-success w-100">Adicionar</button>
+    </div>
   </form>
-</div>
-<form method="post" action="{{ url_for('inspecao_nova', vid=v.id) }}">
-  <button class="btn primary">Nova Inspeção (Checklist)</button>
-</form>
+</section>
+
+{% endblock %}

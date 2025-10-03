@@ -1,85 +1,83 @@
 {% extends "base.html" %}
 {% block content %}
 
-<h1 class="mb-3">Painel do Gestor</h1>
-
-<nav class="mb-4">
-  <a href="{{ url_for('veiculos_list') }}">🚚 Veículos</a> |
-  <a href="{{ url_for('pneus_list') }}">🛞 Pneus</a> |
-  <a href="{{ url_for('os_list') }}">🧾 Ordens de Serviço</a> |
-  <a href="{{ url_for('servicos_autorizados') }}">✅ Serviços Autorizados</a> |
-  <a href="{{ url_for('barcode_tool') }}">🏷️ Código de Barras</a> |
-  <a href="{{ url_for('notificacoes') }}">🔔 Notificações</a>
-</nav>
-
-{% with msgs = get_flashed_messages(with_categories=true) %}
-  {% if msgs %}
-    <div>
-      {% for cat, msg in msgs %}
-        <div class="alert alert-{{ 'success' if cat=='ok' else 'danger' if cat=='error' else 'info' }}">{{ msg }}</div>
-      {% endfor %}
-    </div>
+{% with m=get_flashed_messages(with_categories=true) %}
+  {% if m %}
+    {% for cat, msg in m %}
+      <div class="alert alert-{{ 'success' if cat=='ok' else 'danger' if cat=='error' else 'info' }} py-2">{{ msg }}</div>
+    {% endfor %}
   {% endif %}
 {% endwith %}
 
-<section class="mb-5">
-  <h2 class="h5">📝 Autorizar novo serviço</h2>
-  <form method="post" action="{{ url_for('gestor_autorizar') }}">
-    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
-      <label>Veículo:</label>
-      <select name="veiculo_id" required>
+<h2 class="h4 mb-3">Painel do Gestor</h2>
+
+<nav class="d-flex gap-2 flex-wrap mb-3 small">
+  <a href="{{ url_for('veiculos_list') }}">🚚 Veículos</a> |
+  <a href="{{ url_for('pneus_list') }}">🛞 Pneus</a> |
+  <a href="{{ url_for('os_list') }}">📋 Ordens de Serviço</a> |
+  <a href="{{ url_for('servicos_autorizados') }}">✅ Serviços Autorizados</a> |
+  <a href="{{ url_for('barcode_tool') }}">� barcode Código de Barras</a> |
+  <a href="{{ url_for('notificacoes') }}">🔔 Notificações</a>
+</nav>
+
+<section class="card p-3 mb-4">
+  <h3 class="h6 mb-3">Autorizar novo serviço</h3>
+  <form method="post" action="{{ url_for('gestor_autorizar') }}" class="row g-2 align-items-end">
+    <div class="col-sm-4">
+      <label class="form-label">Veículo</label>
+      <select class="form-select form-select-sm" name="veiculo_id" required>
         {% for v in veiculos %}
           <option value="{{ v.id }}">{{ v.placa }} — {{ v.motorista }}</option>
         {% endfor %}
       </select>
-
-      <label>Descrição:</label>
-      <input type="text" name="descricao" placeholder="Ex.: Troca de pneu dianteiro esquerdo" required>
-
-      <button type="submit">Autorizar</button>
+    </div>
+    <div class="col-sm-6">
+      <label class="form-label">Descrição</label>
+      <input class="form-control form-control-sm" type="text" name="descricao" placeholder="Ex.: Troca de pneu dianteiro" required>
+    </div>
+    <div class="col-sm-2">
+      <button class="btn btn-sm btn-primary w-100">Autorizar</button>
     </div>
   </form>
 </section>
 
-<section class="mb-5">
-  <h2 class="h5">🚚 Veículos</h2>
-  <table border="1" cellpadding="6" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Placa</th>
-        <th>Motorista</th>
-        <th>Detalhes</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for v in veiculos %}
+<section class="mb-4">
+  <h3 class="h6 mb-2">🚚 Veículos</h3>
+  <div class="table-responsive">
+    <table class="table table-sm table-bordered align-middle">
+      <thead>
         <tr>
-          <td>{{ v.placa }}</td>
-          <td>{{ v.motorista }}</td>
-          <td><a href="{{ url_for('veiculo_detail', vid=v.id) }}">Abrir</a></td>
+          <th>Placa</th>
+          <th>Motorista</th>
+          <th style="width:100px">Detalhes</th>
         </tr>
-      {% else %}
-        <tr><td colspan="3">Nenhum veículo cadastrado.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for v in veiculos %}
+        <tr>
+          <td class="fw-semibold">{{ v.placa }}</td>
+          <td>{{ v.motorista }}</td>
+          <td><a class="btn btn-sm btn-outline-primary" href="{{ url_for('veiculo_detail', vid=v.id) }}">Abrir</a></td>
+        </tr>
+        {% else %}
+        <tr><td colspan="3" class="text-muted">Nenhum veículo.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
 
-<section class="mb-5">
-  <h2 class="h5">🛞 Pneus em Estoque</h2>
-  <table border="1" cellpadding="6" cellspacing="0">
-    <thead>
-      <tr>
-        <th>Série</th>
-        <th>Marca</th>
-        <th>Modelo</th>
-        <th>Medida</th>
-        <th>Pressão</th>
-        <th>Sulco</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for p in estoque %}
+<section class="mb-4">
+  <h3 class="h6 mb-2">🛞 Pneus em Estoque</h3>
+  <div class="table-responsive">
+    <table class="table table-sm table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>Série</th><th>Marca</th><th>Modelo</th><th>Medida</th><th>Pressão</th><th>Sulco</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for p in estoque %}
         <tr>
           <td>{{ p.numero_serie or '-' }}</td>
           <td>{{ p.marca or '-' }}</td>
@@ -88,39 +86,41 @@
           <td>{{ p.pressao }}</td>
           <td>{{ p.sulco }}</td>
         </tr>
-      {% else %}
-        <tr><td colspan="6">Sem pneus no estoque.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        {% else %}
+        <tr><td colspan="6" class="text-muted">Sem pneus em estoque.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
 </section>
 
 <section>
-  <h2 class="h5">✅ Serviços Autorizados Recentes</h2>
-  <table border="1" cellpadding="6" cellspacing="0">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Veículo</th>
-        <th>Descrição</th>
-        <th>Status</th>
-        <th>Criado em</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for s in servicos %}
+  <h3 class="h6 mb-2">✅ Serviços Autorizados Recentes</h3>
+  <div class="table-responsive">
+    <table class="table table-sm table-bordered align-middle">
+      <thead>
+        <tr>
+          <th>#</th><th>Veículo</th><th>Descrição</th><th>Status</th><th>Criado em</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for s in servicos %}
         <tr>
           <td>{{ s.id }}</td>
-          <td>{{ s.veiculo.placa if s.veiculo else '-' }}</td>
+          <td>{{ s.veiculo.placa }}</td>
           <td>{{ s.descricao }}</td>
           <td>{{ s.status }}</td>
           <td>{{ s.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
         </tr>
-      {% else %}
-        <tr><td colspan="5">Nenhum serviço autorizado.</td></tr>
-      {% endfor %}
-    </tbody>
-  </table>
+        {% else %}
+        <tr><td colspan="5" class="text-muted">Sem autorizações.</td></tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <div class="mt-2">
+    <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('servicos_autorizados') }}">Ver todos</a>
+  </div>
 </section>
 
 {% endblock %}

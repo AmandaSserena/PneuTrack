@@ -1,35 +1,57 @@
 
 {% extends "base.html" %}
 {% block content %}
-<h2>Inspeção #{{ ins.id }} — {{ v.placa }}</h2>
-<form method="post" class="form">
-  <div class="card">
-    <h3>Checklist</h3>
+
+<h2 class="h4 mb-3">Checklist — {{ v.placa }}</h2>
+
+<nav class="mb-3 d-flex gap-2 flex-wrap">
+  <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('fila') }}">← Voltar à fila</a>
+  <a class="btn btn-sm btn-outline-secondary" href="{{ url_for('veiculo_detail', vid=v.id) }}">Ver veículo</a>
+</nav>
+
+<div class="mb-3">
+  <span class="badge bg-{{ 'secondary' if ins.status=='aberta' else 'info' if ins.status=='enviada' else 'success' if ins.status=='aprovada' else 'danger' }}">
+    Status: {{ ins.status|capitalize }}
+  </span>
+</div>
+
+<form method="post" class="card p-3 mb-3">
+  <h3 class="h6 mb-3">Itens do checklist</h3>
+
+  <div class="vstack gap-2">
     {% for it in itens %}
-      <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
-        <input type="checkbox" name="ok_{{it.id}}" {% if it.ok %}checked{% endif %}>
-        <strong style="min-width:260px">{{ it.titulo }}</strong>
-        <input name="obs_{{it.id}}" placeholder="Observação" value="{{ it.obs or '' }}" style="flex:1">
+      <div class="row g-2 align-items-center">
+        <div class="col-sm-6">
+          <label class="form-check">
+            <input class="form-check-input" type="checkbox" name="ok_{{ it.id }}" {% if it.ok %}checked{% endif %}>
+            <span class="form-check-label">{{ it.titulo }}</span>
+          </label>
+        </div>
+        <div class="col-sm-6">
+          <input class="form-control form-control-sm" type="text" name="obs_{{ it.id }}" placeholder="Observações" value="{{ it.obs or '' }}">
+        </div>
       </div>
     {% endfor %}
-    <label>Observações gerais</label>
-    <textarea name="observacoes" rows="3" placeholder="Anotações adicionais" style="width:100%">{{ ins.observacoes or '' }}</textarea>
-    <div class="row" style="margin-top:10px">
-      <button class="btn">Salvar</button>
-      {% if session.get('email') and 'tecnico' in session.get('email') %}
-      <form method="post" action="{{ url_for('inspecao_enviar', iid=ins.id) }}"><button class="btn primary">Enviar para aprovação</button></form>
-      {% endif %}
-      {% if session.get('email') and 'gestor' in session.get('email') %}
-      <form method="post" action="{{ url_for('inspecao_status', iid=ins.id) }}">
-        <select name="status">
-          {% for s in ['aprovada','reprovada'] %}
-            <option value="{{s}}">{{s}}</option>
-          {% endfor %}
-        </select>
-        <button class="btn">Atualizar</button>
-      </form>
-      {% endif %}
-    </div>
+  </div>
+
+  <div class="mt-3">
+    <label class="form-label">Observações gerais</label>
+    <textarea class="form-control" name="observacoes" rows="3">{{ ins.observacoes or '' }}</textarea>
+  </div>
+
+  <div class="mt-3 d-flex gap-2">
+    <button class="btn btn-primary">Salvar</button>
   </div>
 </form>
+
+{% if ins.status != 'enviada' and ins.status != 'aprovada' and ins.status != 'reprovada' %}
+<form method="post" action="{{ url_for('inspecao_enviar', iid=ins.id) }}">
+  <button class="btn btn-success">Enviar para aprovação do gestor</button>
+</form>
+{% else %}
+<div class="alert alert-info mt-3">
+  Este checklist já foi <b>{{ ins.status }}</b>. Caso precise editar, salve alterações e reenvie conforme o fluxo definido.
+</div>
+{% endif %}
+
 {% endblock %}
