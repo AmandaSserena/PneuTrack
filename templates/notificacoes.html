@@ -1,0 +1,21 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Notificações</h2>
+<table class="table">
+  <tr><th>Data</th><th>Mensagem</th><th>Link</th><th>Lida</th><th></th></tr>
+  {% for n in notes %}
+    <tr>
+      <td>{{ n.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+      <td>{{ n.mensagem }}</td>
+      <td><a class="btn outline" href="{{ n.link }}">Abrir</a></td>
+      <td>{{ 'Sim' if n.lida else 'Não' }}</td>
+      <td>
+        {% if not n.lida %}
+        <form method="post" action="{{ url_for('notificacao_lida', nid=n.id) }}"><button class="btn">Marcar lida</button></form>
+        {% endif %}
+      </td>
+    </tr>
+  {% endfor %}
+</table>
+{% endblock %}

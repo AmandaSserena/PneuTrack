@@ -1,0 +1,17 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="auth-card">
+  <div class="logo-circle">🚚</div>
+  <h1 class="app-name">Pneutrack</h1>
+  <p class="subtitle">Sistema de Gestão de Pneus</p>
+  <form method="post" class="form">
+    <label>Email Corporativo</label>
+    <input name="email" type="email" placeholder="seuemail@empresa.com" required>
+    <label>Senha</label>
+    <input name="senha" type="password" placeholder="Digite sua senha" required>
+    <button class="btn primary" type="submit">Entrar no Sistema</button>
+  </form>
+  <p class="muted">Contas de demonstração: <strong>gestor@empresa.com</strong> / <strong>tecnico@empresa.com</strong> — senha: <strong>123456</strong></p>
+</div>
+{% endblock %}

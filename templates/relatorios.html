@@ -1,0 +1,29 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Relatórios</h2>
+
+<h3>Custo por Veículo (OS)</h3>
+<table class="table">
+  <tr><th>Placa</th><th>Total (R$)</th></tr>
+  {% for placa, total in custos %}
+    <tr><td>{{ placa }}</td><td>{{ '%.2f'|format(total or 0) }}</td></tr>
+  {% endfor %}
+</table>
+
+<h3>Pneus por Status</h3>
+<table class="table">
+  <tr><th>Status</th><th>Quantidade</th></tr>
+  {% for status, qtd in por_status %}
+    <tr><td>{{ status }}</td><td>{{ qtd }}</td></tr>
+  {% endfor %}
+</table>
+
+<h3>Média de Sulco por Marca/Modelo</h3>
+<table class="table">
+  <tr><th>Marca</th><th>Modelo</th><th>Sulco médio (mm)</th></tr>
+  {% for marca, modelo, media in avg_sulco %}
+    <tr><td>{{ marca or '-' }}</td><td>{{ modelo or '-' }}</td><td>{{ '%.2f'|format(media or 0) }}</td></tr>
+  {% endfor %}
+</table>
+{% endblock %}

@@ -1,0 +1,56 @@
+
+:root{
+  --brand1:#0AA36C;
+  --brand2:#1C7DD9;
+  --bg:#f4fbf7;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;background:linear-gradient(180deg,#f4fbf7,#f5f9ff);color:#0b1b2b}
+.topbar{display:flex;justify-content:space-between;align-items:center;padding:12px 20px;background:linear-gradient(90deg,var(--brand1),var(--brand2));color:#fff}
+.brand{display:flex;gap:10px;align-items:center}
+.logo{width:34px;height:34px;border-radius:10px;background:#fff;color:#0b1b2b;display:grid;place-items:center;font-size:18px}
+.title{font-weight:700;letter-spacing:.5px}
+.user{display:flex;gap:10px;align-items:center}
+.container{max-width:1100px;margin:24px auto;padding:0 16px}
+
+.auth-card{max-width:420px;margin:40px auto;background:#fff;border-radius:14px;padding:24px;box-shadow:0 10px 24px rgba(0,0,0,.08)}
+.logo-circle{width:64px;height:64px;border-radius:16px;background:linear-gradient(135deg,var(--brand1),var(--brand2));display:grid;place-items:center;font-size:28px;color:#fff;margin:0 auto 10px}
+.app-name{text-align:center;margin:6px 0 0}
+.subtitle{text-align:center;margin:0 0 16px;color:#557}
+.form{display:flex;flex-direction:column;gap:6px}
+input,select{padding:10px 12px;border:1px solid #dde3ee;border-radius:10px;outline:none}
+input:focus,select:focus{border-color:var(--brand2);box-shadow:0 0 0 3px rgba(28,125,217,.15)}
+.btn{padding:10px 14px;border-radius:12px;border:none;cursor:pointer;display:inline-block;text-decoration:none;text-align:center;background:#e7eef8}
+.btn.primary{background:linear-gradient(90deg,var(--brand1),var(--brand2));color:#fff;font-weight:600}
+.btn.success{background:linear-gradient(90deg,#16a34a,#22c55e);color:#fff;font-weight:600}
+.btn.outline{background:#fff;border:1px solid #cbd5e1}
+.btn.small{padding:6px 10px;border-radius:10px;font-size:.9rem}
+.row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+
+.layout{display:grid;grid-template-columns:260px 1fr;gap:18px}
+.sidebar{background:#fff;border-radius:14px;padding:16px;height:fit-content;border:1px solid #e5e9f2}
+.sidebar nav{display:flex;flex-direction:column;gap:8px}
+.sidebar a{text-decoration:none;color:#0b1b2b;padding:8px;border-radius:10px}
+.sidebar a:hover{background:#f0f5ff}
+
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.card{background:#fff;border-radius:14px;padding:16px;border:1px solid #e5e9f2}
+.card.link{text-decoration:none;color:inherit;display:block}
+.card h3{margin:0 0 6px}
+
+.pneu-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px}
+.pneu{border:1px dashed #cbd5e1;border-radius:12px;padding:10px;background:#fbfdff}
+.pneu-title{font-weight:600}
+.pneu-meta{color:#667}
+
+.table{width:100%;border-collapse:collapse;background:#fff;border-radius:12px;overflow:hidden;border:1px solid #e5e9f2}
+.table th,.table td{padding:10px;border-bottom:1px solid #eef2f7;text-align:left}
+.table tr:last-child td{border-bottom:none}
+
+.flash-wrap{max-width:1100px;margin:10px auto;padding:0 16px}
+.flash{padding:10px 14px;border-radius:10px;margin-bottom:10px}
+.flash.ok{background:#e7f9ee;color:#116d3b}
+.flash.error{background:#ffe8ec;color:#8f2435}
+
+.quick-actions{display:flex;flex-wrap:wrap;gap:10px}
+.muted{color:#6b7c93;font-size:.95rem;margin-top:8px}

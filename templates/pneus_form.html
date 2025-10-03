@@ -1,0 +1,28 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ 'Editar' if pneu else 'Novo' }} Pneu</h2>
+<form method="post" class="form" style="max-width:520px">
+  <label>Nº Fogo</label>
+  <input name="numero_fogo" value="{{ pneu.numero_fogo if pneu else '' }}">
+  <label>Nº Série *</label>
+  <input name="numero_serie" required value="{{ pneu.numero_serie if pneu else '' }}">
+  <label>Marca</label>
+  <input name="marca" value="{{ pneu.marca if pneu else '' }}">
+  <label>Modelo</label>
+  <input name="modelo" value="{{ pneu.modelo if pneu else '' }}">
+  <label>Medida</label>
+  <input name="medida" value="{{ pneu.medida if pneu else '' }}">
+  <label>Status</label>
+  <select name="status">
+    {% for s in ['estoque','ativo','conserto','recapagem','vendido','sucateado','rodizio'] %}
+      <option value="{{s}}" {% if pneu and pneu.status==s %}selected{% endif %}>{{s}}</option>
+    {% endfor %}
+  </select>
+  <label>Pressão (psi)</label>
+  <input name="pressao" type="number" step="0.1" value="{{ pneu.pressao if pneu else 0 }}">
+  <label>Sulco (mm)</label>
+  <input name="sulco" type="number" step="0.1" value="{{ pneu.sulco if pneu else 0 }}">
+  <button class="btn primary">Salvar</button>
+</form>
+{% endblock %}

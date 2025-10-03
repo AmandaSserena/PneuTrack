@@ -1,0 +1,13 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Fila de caminhões</h2>
+<div class="grid">
+{% for t in veiculos %}
+  <a class="card link" href="{{ url_for('veiculo_detail', vid=t.id) }}">
+    <h3>{{ t.placa }}</h3>
+    <p>Motorista: {{ t.motorista }}</p>
+  </a>
+{% endfor %}
+</div>
+{% endblock %}

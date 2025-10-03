@@ -1,0 +1,14 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>{{ 'Editar' if v else 'Novo' }} Veículo</h2>
+<form method="post" class="form" style="max-width:520px">
+  <label>Placa *</label>
+  <input name="placa" required value="{{ v.placa if v else '' }}">
+  <label>Motorista *</label>
+  <input name="motorista" required value="{{ v.motorista if v else '' }}">
+  <label>Alerta km máximo</label>
+  <input name="alerta_km_max" type="number" value="{{ v.alerta_km_max if v else 50000 }}">
+  <button class="btn primary">Salvar</button>
+</form>
+{% endblock %}

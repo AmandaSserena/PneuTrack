@@ -1,0 +1,35 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Inspeção #{{ ins.id }} — {{ v.placa }}</h2>
+<form method="post" class="form">
+  <div class="card">
+    <h3>Checklist</h3>
+    {% for it in itens %}
+      <div style="display:flex;gap:8px;align-items:center;margin-bottom:6px">
+        <input type="checkbox" name="ok_{{it.id}}" {% if it.ok %}checked{% endif %}>
+        <strong style="min-width:260px">{{ it.titulo }}</strong>
+        <input name="obs_{{it.id}}" placeholder="Observação" value="{{ it.obs or '' }}" style="flex:1">
+      </div>
+    {% endfor %}
+    <label>Observações gerais</label>
+    <textarea name="observacoes" rows="3" placeholder="Anotações adicionais" style="width:100%">{{ ins.observacoes or '' }}</textarea>
+    <div class="row" style="margin-top:10px">
+      <button class="btn">Salvar</button>
+      {% if session.get('email') and 'tecnico' in session.get('email') %}
+      <form method="post" action="{{ url_for('inspecao_enviar', iid=ins.id) }}"><button class="btn primary">Enviar para aprovação</button></form>
+      {% endif %}
+      {% if session.get('email') and 'gestor' in session.get('email') %}
+      <form method="post" action="{{ url_for('inspecao_status', iid=ins.id) }}">
+        <select name="status">
+          {% for s in ['aprovada','reprovada'] %}
+            <option value="{{s}}">{{s}}</option>
+          {% endfor %}
+        </select>
+        <button class="btn">Atualizar</button>
+      </form>
+      {% endif %}
+    </div>
+  </div>
+</form>
+{% endblock %}

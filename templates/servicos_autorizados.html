@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block content %}
+<h1>Serviços autorizados</h1>
+<nav><a href="{{ url_for('gestor_dashboard') }}">← Voltar</a></nav>
+<table border="1" cellpadding="6" cellspacing="0">
+  <thead>
+    <tr>
+      <th>#</th><th>Veículo</th><th>Descrição</th><th>Status</th><th>Criado em</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for s in servicos %}
+      <tr>
+        <td>{{ s.id }}</td>
+        <td>{{ s.veiculo.placa if s.veiculo else '-' }}</td>
+        <td>{{ s.descricao }}</td>
+        <td>{{ s.status }}</td>
+        <td>{{ s.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+      </tr>
+    {% else %}
+      <tr><td colspan="5">Nenhum serviço autorizado.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

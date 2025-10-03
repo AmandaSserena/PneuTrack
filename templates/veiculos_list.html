@@ -1,0 +1,22 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Veículos</h2>
+<a class="btn primary" href="{{ url_for('veiculos_novo') }}">+ Novo Veículo</a>
+<div class="grid" style="margin-top:10px">
+{% for v in veiculos %}
+  <div class="card">
+    <h3>{{ v.placa }}</h3>
+    <p><strong>Motorista:</strong> {{ v.motorista }}</p>
+    <p><strong>Alerta km:</strong> {{ v.alerta_km_max }}</p>
+    <div class="row">
+      <a class="btn outline" href="{{ url_for('veiculo_detail', vid=v.id) }}">Abrir</a>
+      <a class="btn" href="{{ url_for('veiculos_editar', vid=v.id) }}">Editar</a>
+      <form method="post" action="{{ url_for('veiculos_excluir', vid=v.id) }}" onsubmit="return confirm('Excluir veículo?')" style="display:inline">
+        <button class="btn">Excluir</button>
+      </form>
+    </div>
+  </div>
+{% endfor %}
+</div>
+{% endblock %}

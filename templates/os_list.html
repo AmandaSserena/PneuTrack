@@ -1,0 +1,25 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Ordens de Serviço</h2>
+<form method="post" action="{{ url_for('os_nova') }}" class="row" style="gap:8px;margin-bottom:10px">
+  <select name="veiculo_id" required>
+    <option value="">Escolha o veículo</option>
+    {% for v in veiculos %}
+      <option value="{{ v.id }}">{{ v.placa }} — {{ v.motorista }}</option>
+    {% endfor %}
+  </select>
+  <input name="descricao" required placeholder="Descrição resumida da OS">
+  <button class="btn primary">+ Criar OS</button>
+</form>
+<table class="table">
+  <tr><th>#</th><th>Veículo</th><th>Descrição</th><th>Status</th><th>Total (R$)</th><th>Criada em</th><th></th></tr>
+  {% for o in os_list %}
+  <tr>
+    <td>{{ o.id }}</td><td>{{ o.veiculo.placa }}</td><td>{{ o.descricao }}</td><td>{{ o.status }}</td>
+    <td>{{ '%.2f'|format(o.custo_total or 0) }}</td><td>{{ o.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+    <td><a class="btn outline" href="{{ url_for('os_detalhe', os_id=o.id) }}">Abrir</a></td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

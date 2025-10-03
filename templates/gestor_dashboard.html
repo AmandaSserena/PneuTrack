@@ -1,0 +1,126 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h1 class="mb-3">Painel do Gestor</h1>
+
+<nav class="mb-4">
+  <a href="{{ url_for('veiculos_list') }}">🚚 Veículos</a> |
+  <a href="{{ url_for('pneus_list') }}">🛞 Pneus</a> |
+  <a href="{{ url_for('os_list') }}">🧾 Ordens de Serviço</a> |
+  <a href="{{ url_for('servicos_autorizados') }}">✅ Serviços Autorizados</a> |
+  <a href="{{ url_for('barcode_tool') }}">🏷️ Código de Barras</a> |
+  <a href="{{ url_for('notificacoes') }}">🔔 Notificações</a>
+</nav>
+
+{% with msgs = get_flashed_messages(with_categories=true) %}
+  {% if msgs %}
+    <div>
+      {% for cat, msg in msgs %}
+        <div class="alert alert-{{ 'success' if cat=='ok' else 'danger' if cat=='error' else 'info' }}">{{ msg }}</div>
+      {% endfor %}
+    </div>
+  {% endif %}
+{% endwith %}
+
+<section class="mb-5">
+  <h2 class="h5">📝 Autorizar novo serviço</h2>
+  <form method="post" action="{{ url_for('gestor_autorizar') }}">
+    <div style="display:flex; gap:8px; align-items:center; flex-wrap:wrap;">
+      <label>Veículo:</label>
+      <select name="veiculo_id" required>
+        {% for v in veiculos %}
+          <option value="{{ v.id }}">{{ v.placa }} — {{ v.motorista }}</option>
+        {% endfor %}
+      </select>
+
+      <label>Descrição:</label>
+      <input type="text" name="descricao" placeholder="Ex.: Troca de pneu dianteiro esquerdo" required>
+
+      <button type="submit">Autorizar</button>
+    </div>
+  </form>
+</section>
+
+<section class="mb-5">
+  <h2 class="h5">🚚 Veículos</h2>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Placa</th>
+        <th>Motorista</th>
+        <th>Detalhes</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for v in veiculos %}
+        <tr>
+          <td>{{ v.placa }}</td>
+          <td>{{ v.motorista }}</td>
+          <td><a href="{{ url_for('veiculo_detail', vid=v.id) }}">Abrir</a></td>
+        </tr>
+      {% else %}
+        <tr><td colspan="3">Nenhum veículo cadastrado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section class="mb-5">
+  <h2 class="h5">🛞 Pneus em Estoque</h2>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>Série</th>
+        <th>Marca</th>
+        <th>Modelo</th>
+        <th>Medida</th>
+        <th>Pressão</th>
+        <th>Sulco</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in estoque %}
+        <tr>
+          <td>{{ p.numero_serie or '-' }}</td>
+          <td>{{ p.marca or '-' }}</td>
+          <td>{{ p.modelo or '-' }}</td>
+          <td>{{ p.medida or '-' }}</td>
+          <td>{{ p.pressao }}</td>
+          <td>{{ p.sulco }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="6">Sem pneus no estoque.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+<section>
+  <h2 class="h5">✅ Serviços Autorizados Recentes</h2>
+  <table border="1" cellpadding="6" cellspacing="0">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Veículo</th>
+        <th>Descrição</th>
+        <th>Status</th>
+        <th>Criado em</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for s in servicos %}
+        <tr>
+          <td>{{ s.id }}</td>
+          <td>{{ s.veiculo.placa if s.veiculo else '-' }}</td>
+          <td>{{ s.descricao }}</td>
+          <td>{{ s.status }}</td>
+          <td>{{ s.created_at.strftime('%d/%m/%Y %H:%M') }}</td>
+        </tr>
+      {% else %}
+        <tr><td colspan="5">Nenhum serviço autorizado.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</section>
+
+{% endblock %}

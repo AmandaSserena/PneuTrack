@@ -1,0 +1,60 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>OS #{{ os.id }} — {{ os.veiculo.placa }} — {{ os.descricao }}</h2>
+<div class="row">
+  <form method="post" action="{{ url_for('os_status', os_id=os.id) }}">
+    <select name="status">
+      {% for s in ['aberta','aprovada','concluida','cancelada'] %}
+        <option value="{{s}}" {% if os.status==s %}selected{% endif %}>{{s}}</option>
+      {% endfor %}
+    </select>
+    <button class="btn">Atualizar Status</button>
+  </form>
+  <a class="btn" href="{{ url_for('os_list') }}">Voltar</a>
+</div>
+
+<h3>Itens</h3>
+<form method="post" action="{{ url_for('os_add_item', os_id=os.id) }}" class="row" style="gap:8px;margin-bottom:10px">
+  <input name="descricao" placeholder="Descrição do item" required>
+  <input name="quantidade" type="number" step="0.01" value="1" required>
+  <input name="valor_unit" type="number" step="0.01" placeholder="Valor unitário" required>
+  <button class="btn primary">Adicionar</button>
+</form>
+
+<table class="table">
+  <tr><th>Descrição</th><th>Qtd</th><th>Vlr Unit</th><th>Subtotal</th><th></th></tr>
+  {% for i in os.itens %}
+  <tr>
+    <td>{{ i.descricao }}</td>
+    <td>{{ i.quantidade }}</td>
+    <td>{{ '%.2f'|format(i.valor_unit) }}</td>
+    <td>{{ '%.2f'|format(i.subtotal) }}</td>
+    <td>
+      <form method="post" action="{{ url_for('os_del_item', item_id=i.id) }}" onsubmit="return confirm('Remover item?')">
+        <button class="btn">Excluir</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+  <tr>
+    <th colspan="3" style="text-align:right">Total</th>
+    <th colspan="2">{{ '%.2f'|format(os.custo_total or 0) }}</th>
+  </tr>
+</table>
+{% endblock %}
+
+<div class="card" style="margin-top:12px">
+  <h3>Anexos</h3>
+  <form method="post" action="{{ url_for('upload_os', os_id=os.id) }}" enctype="multipart/form-data" class="row" style="gap:8px">
+    <input type="file" name="arquivo" required>
+    <button class="btn">Enviar</button>
+  </form>
+  <ul>
+    {% for a in os.anexos %}
+      <li><a class="btn outline" href="{{ url_for('serve_anexo', filename=a.filename) }}">{{ a.original }}</a></li>
+    {% else %}
+      <li>Nenhum anexo.</li>
+    {% endfor %}
+  </ul>
+</div>

@@ -1,0 +1,15 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Instalar pneu — {{ v.placa }} / {{ pos.pos_label }}</h2>
+<form method="post" class="form" style="max-width:520px">
+  <label>Escolha um pneu do estoque</label>
+  <select name="pneu_id" required>
+    {% for p in estoque %}
+      <option value="{{ p.id }}">{{ p.numero_serie }} — {{ p.marca }} {{ p.modelo }} ({{ p.medida }})</option>
+    {% endfor %}
+  </select>
+  <button class="btn primary">Instalar</button>
+  <a class="btn" href="{{ url_for('veiculo_detail', vid=v.id) }}">Cancelar</a>
+</form>
+{% endblock %}

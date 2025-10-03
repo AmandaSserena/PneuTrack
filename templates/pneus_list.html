@@ -1,0 +1,25 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Pneus</h2>
+<form method="get" class="row" style="margin-bottom:10px">
+  <input name="q" value="{{ q }}" placeholder="Buscar por série, marca, modelo, medida">
+  <button class="btn">Buscar</button>
+  <a class="btn primary" href="{{ url_for('pneus_novo') }}">+ Novo Pneu</a>
+</form>
+<table class="table">
+  <tr><th>ID</th><th>Nº Série</th><th>Marca</th><th>Modelo</th><th>Medida</th><th>Status</th><th>Pressão</th><th>Sulco</th><th></th></tr>
+  {% for p in pneus %}
+  <tr>
+    <td>{{ p.id }}</td><td>{{ p.numero_serie or '-' }}</td><td>{{ p.marca or '-' }}</td><td>{{ p.modelo or '-' }}</td>
+    <td>{{ p.medida or '-' }}</td><td>{{ p.status }}</td><td>{{ p.pressao }}</td><td>{{ p.sulco }}</td>
+    <td>
+      <a class="btn outline" href="{{ url_for('pneus_editar', pid=p.id) }}">Editar</a>
+      <form method="post" action="{{ url_for('pneus_excluir', pid=p.id) }}" style="display:inline" onsubmit="return confirm('Excluir pneu?')">
+        <button class="btn">Excluir</button>
+      </form>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}

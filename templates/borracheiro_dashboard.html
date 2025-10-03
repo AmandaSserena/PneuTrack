@@ -1,0 +1,12 @@
+
+{% extends "base.html" %}
+{% block content %}
+<div class="quick-actions">
+  <a class="btn primary" href="{{ url_for('fila') }}">Abrir Fila de Caminhões</a>
+  <a class="btn" href="{{ url_for('estoque') }}">Estoque de pneus</a>
+  <a class="btn" href="{{ url_for('servicos_autorizados') }}">Veículos com serviços autorizados</a>
+  <a class="btn outline" href="#">Preencher novo veículo</a>
+  <a class="btn outline" href="#">Suporte técnico</a>
+  <a class="btn" href="{{ url_for('notificacoes') }}">Notificações</a>
+</div>
+{% endblock %}

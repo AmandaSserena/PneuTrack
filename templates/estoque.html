@@ -1,0 +1,14 @@
+
+{% extends "base.html" %}
+{% block content %}
+<h2>Estoque</h2>
+<table class="table">
+  <tr><th>Nº Série</th><th>Marca</th><th>Modelo</th><th>Medida</th><th>Status</th><th>Pressão</th><th>Sulco</th></tr>
+  {% for p in pneus %}
+  <tr>
+    <td>{{ p.numero_serie }}</td><td>{{ p.marca }}</td><td>{{ p.modelo }}</td>
+    <td>{{ p.medida }}</td><td>{{ p.status }}</td><td>{{ p.pressao }}</td><td>{{ p.sulco }}</td>
+  </tr>
+  {% endfor %}
+</table>
+{% endblock %}
